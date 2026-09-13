@@ -38,6 +38,9 @@
         href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@500;700&family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Dancing+Script:wght@600;700&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=WindSong:wght@400;500&display=swap"
         rel="stylesheet">
 
+    <!-- Tối ưu hóa tải trang cực nhanh (Preload ảnh chính trên cùng Page 1) -->
+    <link rel="preload" as="image" href="assets/page1/main.jpg" fetchpriority="high">
+
     <style>
         :root {
             --primary-navy: #0e223d;
@@ -2271,6 +2274,344 @@
             transition-delay: 0.50s;
         }
 
+        /* ================= MÀN HÌNH CHÀO MỞ MÀN SÂN KHẤU & BƯỚM XANH ================= */
+        .invitation-preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            overflow: hidden;
+            pointer-events: all;
+            background: transparent;
+        }
+
+        /* 2 CÁNH MÀN SÂN KHẤU HOÀNG GIA */
+        .curtain-half {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 50.5%;
+            height: 100%;
+            z-index: 10;
+            background: radial-gradient(circle at 40% 50%, #152e50 0%, #0a1626 100%);
+            transition: transform 1.25s cubic-bezier(0.33, 1, 0.68, 1);
+            will-change: transform;
+        }
+
+        .curtain-left {
+            left: 0;
+            box-shadow: 12px 0 35px rgba(0, 0, 0, 0.65);
+            border-right: 1px solid rgba(226, 192, 112, 0.4);
+        }
+
+        .curtain-right {
+            right: 0;
+            box-shadow: -12px 0 35px rgba(0, 0, 0, 0.65);
+            border-left: 1px solid rgba(226, 192, 112, 0.4);
+        }
+
+        /* Nẹp viền vàng kim lấp lánh ở mép màn khép */
+        .curtain-gold-trim {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, transparent 5%, #e2c070 20%, #ffffff 50%, #e2c070 80%, transparent 95%);
+            box-shadow: 0 0 14px rgba(226, 192, 112, 0.85);
+        }
+
+        .curtain-left .curtain-gold-trim {
+            right: 0;
+        }
+
+        .curtain-right .curtain-gold-trim {
+            left: 0;
+        }
+
+        /* Hiệu ứng nếp gấp lụa nhung sân khấu */
+        .curtain-fabric-texture {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(90deg,
+                    rgba(0, 0, 0, 0.15) 0px,
+                    rgba(255, 255, 255, 0.03) 25px,
+                    rgba(0, 0, 0, 0.18) 50px);
+            opacity: 0.8;
+        }
+
+        /* KHỐI NỘI DUNG TRUNG TÂM */
+        .preloader-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 320px;
+            width: 86%;
+            padding: 30px 22px;
+            background: #0c1a2e;
+            border: 1.5px solid rgba(226, 192, 112, 0.35);
+            border-radius: 24px;
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.7), 0 0 35px rgba(200, 162, 81, 0.15);
+            color: #ffffff;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .preloader-cap-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(200, 162, 81, 0.12);
+            border: 1.5px solid rgba(200, 162, 81, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 0 28px rgba(200, 162, 81, 0.25);
+            animation: preloaderFloat 2.2s ease-in-out infinite;
+        }
+
+        .preloader-cap-icon svg {
+            width: 38px;
+            height: 38px;
+            color: #f3cf7a;
+        }
+
+        @keyframes preloaderFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+                box-shadow: 0 0 24px rgba(200, 162, 81, 0.2);
+            }
+
+            50% {
+                transform: translateY(-5px) scale(1.04);
+                box-shadow: 0 0 36px rgba(200, 162, 81, 0.4);
+            }
+        }
+
+        .preloader-sub {
+            font-family: var(--font-serif);
+            font-size: 11px;
+            letter-spacing: 3.5px;
+            color: #d1b46a;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .preloader-title {
+            font-family: var(--font-title-decor), 'Cinzel', serif;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #ffffff;
+            margin-bottom: 22px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+        }
+
+        .preloader-bar-wrap {
+            width: 180px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 99px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .preloader-bar-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 40%;
+            background: linear-gradient(90deg, transparent, #e2c070, #ffffff, #e2c070, transparent);
+            border-radius: 99px;
+            animation: preloaderShimmer 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes preloaderShimmer {
+            0% {
+                left: -40%;
+                width: 30%;
+            }
+
+            50% {
+                width: 60%;
+            }
+
+            100% {
+                left: 100%;
+                width: 30%;
+            }
+        }
+
+        .preloader-hint {
+            font-family: var(--font-sans);
+            font-size: 12.5px;
+            color: rgba(230, 238, 250, 0.75);
+            letter-spacing: 0.5px;
+            font-style: italic;
+        }
+
+        /* ================= ĐÀN BƯỚM XANH MORPHO TOÀN MÀN HÌNH ================= */
+        .preloader-butterflies-swarm {
+            position: absolute;
+            inset: 0;
+            z-index: 25;
+            pointer-events: none;
+        }
+
+        .p-bf {
+            position: absolute;
+            transition: transform 1.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 1s ease;
+            filter: drop-shadow(0 0 12px rgba(96, 165, 250, 0.95)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+        }
+
+        /* Quỹ đạo bay lượn ban đầu (3 giây chờ mở thiệp) */
+        .p-bf-1 {
+            top: 18%;
+            left: 16%;
+            animation: hoverFly1 3.5s ease-in-out infinite alternate;
+        }
+
+        .p-bf-2 {
+            top: 22%;
+            right: 18%;
+            animation: hoverFly2 4.0s ease-in-out infinite alternate;
+        }
+
+        .p-bf-3 {
+            top: 70%;
+            left: 15%;
+            animation: hoverFly3 3.8s ease-in-out infinite alternate;
+        }
+
+        .p-bf-4 {
+            top: 72%;
+            right: 16%;
+            animation: hoverFly1 4.2s ease-in-out infinite alternate;
+        }
+
+        .p-bf-5 {
+            top: 38%;
+            left: 8%;
+            animation: hoverFly2 3.2s ease-in-out infinite alternate;
+        }
+
+        .p-bf-6 {
+            top: 42%;
+            right: 8%;
+            animation: hoverFly3 3.6s ease-in-out infinite alternate;
+        }
+
+        .p-bf-7 {
+            top: 10%;
+            left: 42%;
+            animation: hoverFly1 4.5s ease-in-out infinite alternate;
+        }
+
+        .p-bf-8 {
+            top: 84%;
+            right: 38%;
+            animation: hoverFly2 3.9s ease-in-out infinite alternate;
+        }
+
+        @keyframes hoverFly1 {
+            0% {
+                transform: scale(1.3) translate(0, 0) rotate(-12deg);
+            }
+
+            100% {
+                transform: scale(1.35) translate(22px, -26px) rotate(10deg);
+            }
+        }
+
+        @keyframes hoverFly2 {
+            0% {
+                transform: scale(1.15) translate(0, 0) rotate(12deg);
+            }
+
+            100% {
+                transform: scale(1.2) translate(-24px, -22px) rotate(-8deg);
+            }
+        }
+
+        @keyframes hoverFly3 {
+            0% {
+                transform: scale(1.4) translate(0, 0) rotate(-8deg);
+            }
+
+            100% {
+                transform: scale(1.35) translate(24px, 20px) rotate(15deg);
+            }
+        }
+
+        /* ================= HIỆU ỨNG MỞ MÀN SÂN KHẤU (.stage-open) ================= */
+        .invitation-preloader.stage-open .p-bf {
+            animation: none !important;
+        }
+
+        .invitation-preloader.stage-open .curtain-left {
+            transform: translateX(-100%);
+        }
+
+        .invitation-preloader.stage-open .curtain-right {
+            transform: translateX(100%);
+        }
+
+        .invitation-preloader.stage-open .preloader-card {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1.08);
+            pointer-events: none;
+        }
+
+        /* ĐÀN BƯỚM VỖ CÁNH BAY DẠT QUA 2 BÊN RỜI MÀN HÌNH */
+        .invitation-preloader.stage-open .p-bf-1 {
+            transform: translate(-380px, -200px) scale(0.5) rotate(-55deg) !important;
+            opacity: 0 !important;
+        }
+
+        .invitation-preloader.stage-open .p-bf-3 {
+            transform: translate(-400px, 80px) scale(0.6) rotate(-70deg) !important;
+            opacity: 0 !important;
+        }
+
+        .invitation-preloader.stage-open .p-bf-5 {
+            transform: translate(-360px, -90px) scale(0.45) rotate(-40deg) !important;
+            opacity: 0 !important;
+        }
+
+        .invitation-preloader.stage-open .p-bf-7 {
+            transform: translate(-320px, -280px) scale(0.5) rotate(-60deg) !important;
+            opacity: 0 !important;
+        }
+
+        .invitation-preloader.stage-open .p-bf-2 {
+            transform: translate(380px, -200px) scale(0.5) rotate(55deg) !important;
+            opacity: 0 !important;
+        }
+
+        .invitation-preloader.stage-open .p-bf-4 {
+            transform: translate(400px, 80px) scale(0.6) rotate(70deg) !important;
+            opacity: 0 !important;
+        }
+
+        .invitation-preloader.stage-open .p-bf-6 {
+            transform: translate(360px, -90px) scale(0.45) rotate(40deg) !important;
+            opacity: 0 !important;
+        }
+
+        .invitation-preloader.stage-open .p-bf-8 {
+            transform: translate(320px, 220px) scale(0.5) rotate(60deg) !important;
+            opacity: 0 !important;
+        }
+
         @media (prefers-reduced-motion: reduce) {
             .has-scroll-reveal .scroll-reveal {
                 opacity: 1 !important;
@@ -2282,6 +2623,80 @@
 </head>
 
 <body>
+
+    <!-- Màn hình mở thiệp sang trọng phong cách mở màn sân khấu (Graduation Ceremony Preloader) -->
+    <div class="invitation-preloader" id="invitationPreloader" aria-live="polite" aria-label="Đang mở thiệp">
+        <!-- 2 Cánh màn sân khấu hoàng gia -->
+        <div class="curtain-half curtain-left">
+            <div class="curtain-fabric-texture"></div>
+            <div class="curtain-gold-trim"></div>
+        </div>
+        <div class="curtain-half curtain-right">
+            <div class="curtain-fabric-texture"></div>
+            <div class="curtain-gold-trim"></div>
+        </div>
+
+        <!-- Đàn bướm xanh Morpho bay lượn toàn màn hình -->
+        <div class="preloader-butterflies-swarm" id="preloaderButterflies">
+            <div class="morpho-butterfly p-bf p-bf-1">
+                <div class="b-wing b-wing-left"></div>
+                <div class="b-body"></div>
+                <div class="b-wing b-wing-right"></div>
+            </div>
+            <div class="morpho-butterfly p-bf p-bf-2">
+                <div class="b-wing b-wing-left"></div>
+                <div class="b-body"></div>
+                <div class="b-wing b-wing-right"></div>
+            </div>
+            <div class="morpho-butterfly p-bf p-bf-3">
+                <div class="b-wing b-wing-left"></div>
+                <div class="b-body"></div>
+                <div class="b-wing b-wing-right"></div>
+            </div>
+            <div class="morpho-butterfly p-bf p-bf-4">
+                <div class="b-wing b-wing-left"></div>
+                <div class="b-body"></div>
+                <div class="b-wing b-wing-right"></div>
+            </div>
+            <div class="morpho-butterfly p-bf p-bf-5">
+                <div class="b-wing b-wing-left"></div>
+                <div class="b-body"></div>
+                <div class="b-wing b-wing-right"></div>
+            </div>
+            <div class="morpho-butterfly p-bf p-bf-6">
+                <div class="b-wing b-wing-left"></div>
+                <div class="b-body"></div>
+                <div class="b-wing b-wing-right"></div>
+            </div>
+            <div class="morpho-butterfly p-bf p-bf-7">
+                <div class="b-wing b-wing-left"></div>
+                <div class="b-body"></div>
+                <div class="b-wing b-wing-right"></div>
+            </div>
+            <div class="morpho-butterfly p-bf p-bf-8">
+                <div class="b-wing b-wing-left"></div>
+                <div class="b-body"></div>
+                <div class="b-wing b-wing-right"></div>
+            </div>
+        </div>
+
+        <!-- Khối nội dung trung tâm -->
+        <div class="preloader-card">
+            <div class="preloader-cap-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                </svg>
+            </div>
+            <div class="preloader-sub">GRADUATION CEREMONY 2026</div>
+            <div class="preloader-title">ĐÀO THANH TÂM</div>
+            <div class="preloader-bar-wrap">
+                <div class="preloader-bar-fill"></div>
+            </div>
+            <div class="preloader-hint">Đang mở thiệp mời...</div>
+        </div>
+    </div>
 
     <!-- Khung Viewport giả lập chuẩn Mobile -->
     <div class="mobile-container">
@@ -2354,7 +2769,7 @@
                 <div class="main-photo-card scroll-reveal reveal-scale delay-200">
                     <img src="assets/page1/main.jpg"
                         onerror="this.src='https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=700'"
-                        alt="Chân dung tốt nghiệp">
+                        alt="Chân dung tốt nghiệp" loading="eager" fetchpriority="high" decoding="async">
                     <div class="signature-overlay">Thanh Tâm</div>
                 </div>
             </section>
@@ -2404,7 +2819,7 @@
 
                 <!-- Ảnh đằng sau có width toàn bộ và height từ đoạn tại điểm đến end page 2 -->
                 <div class="page-2-bottom-photo scroll-reveal reveal-scale delay-150">
-                    <img src="assets/page2/bg.jpg" alt="Lễ tốt nghiệp - Thanh Tâm">
+                    <img src="assets/page2/bg.jpg" alt="Lễ tốt nghiệp - Thanh Tâm" loading="lazy" decoding="async">
                 </div>
             </section>
         </div>
@@ -2419,7 +2834,7 @@
                 </div>
                 <!-- Vết rách giấy cạnh dưới rách xuống -->
                 <div class="torn-tear-top">
-                    <img src="assets/torn_paper_top.png" alt="Rách giấy trên">
+                    <img src="assets/torn_paper_top.png" alt="Rách giấy trên" loading="lazy" decoding="async">
                 </div>
             </div>
 
@@ -2549,19 +2964,19 @@
             <!-- 3 ảnh so le trên đỉnh theo chuẩn ảnh mẫu -->
             <div class="page-5-top-layout">
                 <div class="p5-photo p5-left scroll-reveal reveal-slide-left delay-100">
-                    <img src="assets/page5/top1xanh.jpg" alt="Kỷ yếu TLU 1">
+                    <img src="assets/page5/top1xanh.jpg" alt="Kỷ yếu TLU 1" loading="lazy" decoding="async">
                 </div>
                 <div class="p5-photo p5-center scroll-reveal reveal-scale delay-200">
-                    <img src="assets/page5/top2xanh.jpg" alt="Kỷ yếu TLU 2">
+                    <img src="assets/page5/top2xanh.jpg" alt="Kỷ yếu TLU 2" loading="lazy" decoding="async">
                 </div>
                 <div class="p5-photo p5-right scroll-reveal reveal-slide-right delay-300">
-                    <img src="assets/page5/top3xanh.jpg" alt="Kỷ yếu TLU 3">
+                    <img src="assets/page5/top3xanh.jpg" alt="Kỷ yếu TLU 3" loading="lazy" decoding="async">
                 </div>
             </div>
 
             <!-- Ảnh tách nền to ở trung tâm đè lên 3 ảnh trên & làm mờ mượt mà ở đáy -->
             <div class="avatar-cutout-wrap scroll-reveal reveal-scale delay-150">
-                <img src="assets/page5/standing_upper.png" alt="Thanh Tâm Tốt Nghiệp">
+                <img src="assets/page5/standing_upper.png" alt="Thanh Tâm Tốt Nghiệp" loading="lazy" decoding="async">
             </div>
 
             <!-- Đồng hồ đếm ngược to rõ, chuẩn typography -->
@@ -2641,7 +3056,7 @@
             <div class="footer-photo-card scroll-reveal reveal-scale">
                 <img src="assets/Footer/footer.jpg"
                     onerror="this.src='https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=700'"
-                    alt="Ảnh kết thiệp">
+                    alt="Ảnh kết thiệp" loading="lazy" decoding="async">
                 <div class="footer-thank-you">Thank you!</div>
             </div>
         </footer>
@@ -2825,7 +3240,49 @@
 
     <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
-        /* 0. Logic mở / đóng Contact Modal */
+        /* ================= 0. KHỞI TẠO MÀN HÌNH MỞ THIỆP (GRADUATION PRELOADER) ================= */
+        const preloader = document.getElementById('invitationPreloader');
+        if (preloader) {
+            const MIN_DISPLAY_TIME = 3000; // Giữ tối thiểu 3 giây cho đẹp mắt theo yêu cầu
+            const MAX_TIMEOUT = 6000;      // Bảo vệ tối đa 6 giây nếu mạng khách quá chậm
+            const startTime = Date.now();
+            let isDismissed = false;
+
+            const dismissPreloader = () => {
+                if (isDismissed) return;
+                isDismissed = true;
+                preloader.classList.add('stage-open');
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 1400);
+            };
+
+            const tryDismiss = () => {
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, MIN_DISPLAY_TIME - elapsed);
+                setTimeout(dismissPreloader, remaining);
+            };
+
+            const heroImg = document.querySelector('.main-photo-card img');
+            if (heroImg && heroImg.complete && heroImg.naturalWidth > 0) {
+                tryDismiss();
+            } else if (heroImg) {
+                heroImg.addEventListener('load', tryDismiss);
+                heroImg.addEventListener('error', tryDismiss);
+            }
+
+            // Khi toàn bộ trang load xong
+            if (document.readyState === 'complete') {
+                tryDismiss();
+            } else {
+                window.addEventListener('load', tryDismiss);
+            }
+
+            // Cơ chế bảo vệ tối đa: Không bao giờ giữ khách chờ quá 6s dù mạng yếu
+            setTimeout(dismissPreloader, MAX_TIMEOUT);
+        }
+
+        /* 0.1. Logic mở / đóng Contact Modal */
         const contactToggle = document.getElementById('contactToggle');
         const contactModal = document.getElementById('contactModal');
         const contactModalClose = document.getElementById('contactModalClose');
