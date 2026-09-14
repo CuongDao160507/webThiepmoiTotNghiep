@@ -1770,7 +1770,7 @@
 
         /* Hiệu ứng tráo ảnh theo nhịp vệt trắng: mờ nhẹ lúc quét vào, nét căng lúc mở ra */
         .p5-photo.is-transitioning img {
-            animation: p5PhotoSwap 0.55s ease-out forwards;
+            animation: p5PhotoSwap 1.0s ease-out forwards;
         }
 
         @keyframes p5PhotoSwap {
@@ -1779,12 +1779,12 @@
                 filter: blur(0px);
             }
 
-            38% {
+            40% {
                 transform: scale(1.03);
                 filter: blur(5px);
             }
 
-            45% {
+            48% {
                 transform: scale(0.97);
                 filter: blur(3px);
             }
@@ -1800,9 +1800,9 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             pointer-events: none;
             z-index: 9;
             opacity: 0;
@@ -1810,35 +1810,37 @@
         }
 
         .p5-photo.is-transitioning::before {
-            animation: p5WhiteFlash 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation: p5WhiteFlash 1.0s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        /* Vệt mờ trắng quét nhanh chéo góc (Fast White Blur Streak) */
+        /* Vệt mờ trắng quét dài & mượt mà chéo góc (White Blur Light Beam) */
         .p5-photo::after {
             content: '';
             position: absolute;
             top: -60%;
             left: -100%;
-            width: 300%;
+            width: 320%;
             height: 220%;
             background: linear-gradient(110deg,
                     transparent 0%,
-                    rgba(255, 255, 255, 0.1) 15%,
-                    rgba(255, 255, 255, 0.85) 35%,
+                    rgba(255, 255, 255, 0.08) 15%,
+                    rgba(255, 255, 255, 0.5) 30%,
+                    rgba(255, 255, 255, 0.95) 45%,
                     rgba(255, 255, 255, 1) 50%,
-                    rgba(255, 255, 255, 0.85) 65%,
-                    rgba(255, 255, 255, 0.1) 85%,
+                    rgba(255, 255, 255, 0.95) 55%,
+                    rgba(255, 255, 255, 0.5) 70%,
+                    rgba(255, 255, 255, 0.08) 85%,
                     transparent 100%);
-            filter: blur(12px);
+            filter: blur(14px);
             pointer-events: none;
             z-index: 10;
             opacity: 0;
-            transform: translate3d(-140%, 0, 0) rotate(15deg);
+            transform: translate3d(-150%, 0, 0) rotate(15deg);
             will-change: transform, opacity;
         }
 
         .p5-photo.is-transitioning::after {
-            animation: p5WhiteStreak 0.55s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+            animation: p5WhiteStreak 1.0s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
         }
 
         @keyframes p5WhiteFlash {
@@ -1846,12 +1848,12 @@
                 opacity: 0;
             }
 
-            38% {
-                opacity: 0.92;
+            36% {
+                opacity: 0.94;
             }
 
-            50% {
-                opacity: 0.92;
+            54% {
+                opacity: 0.94;
             }
 
             100% {
@@ -1862,25 +1864,25 @@
         @keyframes p5WhiteStreak {
             0% {
                 opacity: 0;
-                transform: translate3d(-140%, 0, 0) rotate(15deg);
+                transform: translate3d(-150%, 0, 0) rotate(15deg);
             }
 
-            25% {
+            20% {
                 opacity: 1;
             }
 
-            45% {
+            46% {
                 opacity: 1;
                 transform: translate3d(0%, 0, 0) rotate(15deg);
             }
 
-            65% {
+            60% {
                 opacity: 1;
             }
 
             100% {
                 opacity: 0;
-                transform: translate3d(140%, 0, 0) rotate(15deg);
+                transform: translate3d(150%, 0, 0) rotate(15deg);
             }
         }
 
@@ -4314,7 +4316,7 @@
                     frame.el.classList.add('is-transitioning');
                 });
 
-                // 2. Đúng lúc vệt mờ trắng che kín ảnh (230ms): tráo ảnh mới ngay bên dưới!
+                // 2. Đúng lúc vệt sáng trắng che kín ảnh (450ms): tráo ảnh mới ngay bên dưới!
                 setTimeout(() => {
                     frames.forEach((frame, idx) => {
                         frame.current = nextPhotos[idx];
@@ -4327,19 +4329,19 @@
                             img.src = nextPhotos[idx];
                         }
                     });
-                }, 230);
+                }, 450);
 
-                // 3. Sau khi vệt mờ trắng lướt qua phải mở màn để lộ ảnh mới (560ms)
+                // 3. Sau khi vệt sáng trắng lướt qua phải mở màn để lộ ảnh mới (1020ms)
                 setTimeout(() => {
                     frames.forEach(frame => {
                         frame.el.classList.remove('is-transitioning');
                     });
                     isTransitioning = false;
-                }, 560);
+                }, 1020);
             }
 
-            // Chu kỳ tự động đổi ảnh đồng thời cả 3 khung (mỗi 4.8 giây đổi 1 lần)
-            const CYCLE_INTERVAL = 4800;
+            // Chu kỳ tự động đổi ảnh đồng thời cả 3 khung (mỗi 5.0 giây đổi 1 lần)
+            const CYCLE_INTERVAL = 5000;
             setInterval(() => {
                 if (!document.hidden) {
                     switchAll3Frames();
