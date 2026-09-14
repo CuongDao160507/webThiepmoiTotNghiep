@@ -1564,7 +1564,7 @@
             gap: 4px;
             padding: 0;
             margin-top: 0;
-            animation: filmScroll 24s linear infinite;
+            animation: filmScroll 68s linear infinite;
             will-change: transform;
         }
 
@@ -1758,10 +1758,130 @@
         }
 
         .p5-photo img {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
+            will-change: transform, filter;
+            backface-visibility: hidden;
+        }
+
+        /* Hiệu ứng tráo ảnh theo nhịp vệt trắng: mờ nhẹ lúc quét vào, nét căng lúc mở ra */
+        .p5-photo.is-transitioning img {
+            animation: p5PhotoSwap 0.55s ease-out forwards;
+        }
+
+        @keyframes p5PhotoSwap {
+            0% {
+                transform: scale(1);
+                filter: blur(0px);
+            }
+
+            38% {
+                transform: scale(1.03);
+                filter: blur(5px);
+            }
+
+            45% {
+                transform: scale(0.97);
+                filter: blur(3px);
+            }
+
+            100% {
+                transform: scale(1);
+                filter: blur(0px);
+            }
+        }
+
+        /* Lớp màng mờ trắng bao phủ (White Blur Flash Wash) che kín khoảnh khắc tráo ảnh */
+        .p5-photo::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            pointer-events: none;
+            z-index: 9;
+            opacity: 0;
+            will-change: opacity;
+        }
+
+        .p5-photo.is-transitioning::before {
+            animation: p5WhiteFlash 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Vệt mờ trắng quét nhanh chéo góc (Fast White Blur Streak) */
+        .p5-photo::after {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -100%;
+            width: 300%;
+            height: 220%;
+            background: linear-gradient(110deg,
+                    transparent 0%,
+                    rgba(255, 255, 255, 0.1) 15%,
+                    rgba(255, 255, 255, 0.85) 35%,
+                    rgba(255, 255, 255, 1) 50%,
+                    rgba(255, 255, 255, 0.85) 65%,
+                    rgba(255, 255, 255, 0.1) 85%,
+                    transparent 100%);
+            filter: blur(12px);
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            transform: translate3d(-140%, 0, 0) rotate(15deg);
+            will-change: transform, opacity;
+        }
+
+        .p5-photo.is-transitioning::after {
+            animation: p5WhiteStreak 0.55s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+        }
+
+        @keyframes p5WhiteFlash {
+            0% {
+                opacity: 0;
+            }
+
+            38% {
+                opacity: 0.92;
+            }
+
+            50% {
+                opacity: 0.92;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes p5WhiteStreak {
+            0% {
+                opacity: 0;
+                transform: translate3d(-140%, 0, 0) rotate(15deg);
+            }
+
+            25% {
+                opacity: 1;
+            }
+
+            45% {
+                opacity: 1;
+                transform: translate3d(0%, 0, 0) rotate(15deg);
+            }
+
+            65% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate3d(140%, 0, 0) rotate(15deg);
+            }
         }
 
         /* Ảnh trái: bắt đầu thấp hơn ảnh giữa khoảng 42px, tỉ lệ ~3:4 */
@@ -2848,76 +2968,282 @@
                         <!-- Vòng 1 -->
                         <div class="film-cell">
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
-                            <div class="film-photo-inner"><img src="assets/page3/film_frame1.jpg" alt="Khoảnh khắc 1">
-                            </div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1322.jpg" alt="Khoảnh khắc 1"
+                                    loading="lazy" decoding="async"></div>
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
                         </div>
                         <div class="film-cell">
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
-                            <div class="film-photo-inner"><img src="assets/page3/film_frame2.jpg" alt="Khoảnh khắc 2">
-                            </div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1326.jpg" alt="Khoảnh khắc 2"
+                                    loading="lazy" decoding="async"></div>
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
                         </div>
                         <div class="film-cell">
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
-                            <div class="film-photo-inner"><img src="assets/page3/film_frame3.jpg" alt="Khoảnh khắc 3">
-                            </div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1468.JPG" alt="Khoảnh khắc 3"
+                                    loading="lazy" decoding="async"></div>
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
                         </div>
                         <div class="film-cell">
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
-                            <div class="film-photo-inner"><img src="assets/page3/film_frame4.jpg" alt="Khoảnh khắc 4">
-                            </div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1496.jpg" alt="Khoảnh khắc 4"
+                                    loading="lazy" decoding="async"></div>
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
                         </div>
                         <div class="film-cell">
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
-                            <div class="film-photo-inner"><img src="assets/page3/film_frame5.jpg" alt="Khoảnh khắc 5">
-                            </div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1563.jpg" alt="Khoảnh khắc 5"
+                                    loading="lazy" decoding="async"></div>
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
                         </div>
                         <div class="film-cell">
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
-                            <div class="film-photo-inner"><img src="assets/page3/film_frame6.jpg" alt="Khoảnh khắc 6">
-                            </div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1590.jpg" alt="Khoảnh khắc 6"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1686.jpg" alt="Khoảnh khắc 7"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1721.jpg" alt="Khoảnh khắc 8"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1733.jpg" alt="Khoảnh khắc 9"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1796.JPG" alt="Khoảnh khắc 10"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1912.jpg" alt="Khoảnh khắc 11"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1929.jpg" alt="Khoảnh khắc 12"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1947.jpg" alt="Khoảnh khắc 13"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1961.jpg" alt="Khoảnh khắc 14"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1981.jpg" alt="Khoảnh khắc 15"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_2004.jpg" alt="Khoảnh khắc 16"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img
+                                    src="assets/page3/94ce9b28-462e-4241-8bcf-afefeba47e15.jpeg" alt="Khoảnh khắc 17"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/film_frame1.jpg" alt="Khoảnh khắc 18"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/film_frame2.jpg" alt="Khoảnh khắc 19"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/film_frame3.jpg" alt="Khoảnh khắc 20"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/film_frame4.jpg" alt="Khoảnh khắc 21"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/film_frame5.jpg" alt="Khoảnh khắc 22"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/film_frame6.jpg" alt="Khoảnh khắc 23"
+                                    loading="lazy" decoding="async"></div>
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
                         </div>
 
                         <!-- Vòng 2 lặp vô tận (Duplicate) -->
                         <div class="film-cell">
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
-                            <div class="film-photo-inner"><img src="assets/page3/film_frame1.jpg" alt="Khoảnh khắc 1">
-                            </div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1322.jpg" alt="Khoảnh khắc 1"
+                                    loading="lazy" decoding="async"></div>
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
                         </div>
                         <div class="film-cell">
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
-                            <div class="film-photo-inner"><img src="assets/page3/film_frame2.jpg" alt="Khoảnh khắc 2">
-                            </div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1326.jpg" alt="Khoảnh khắc 2"
+                                    loading="lazy" decoding="async"></div>
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
                         </div>
                         <div class="film-cell">
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
-                            <div class="film-photo-inner"><img src="assets/page3/film_frame3.jpg" alt="Khoảnh khắc 3">
-                            </div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1468.JPG" alt="Khoảnh khắc 3"
+                                    loading="lazy" decoding="async"></div>
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
                         </div>
                         <div class="film-cell">
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
-                            <div class="film-photo-inner"><img src="assets/page3/film_frame4.jpg" alt="Khoảnh khắc 4">
-                            </div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1496.jpg" alt="Khoảnh khắc 4"
+                                    loading="lazy" decoding="async"></div>
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
                         </div>
                         <div class="film-cell">
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
-                            <div class="film-photo-inner"><img src="assets/page3/film_frame5.jpg" alt="Khoảnh khắc 5">
-                            </div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1563.jpg" alt="Khoảnh khắc 5"
+                                    loading="lazy" decoding="async"></div>
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
                         </div>
                         <div class="film-cell">
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
-                            <div class="film-photo-inner"><img src="assets/page3/film_frame6.jpg" alt="Khoảnh khắc 6">
-                            </div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1590.jpg" alt="Khoảnh khắc 6"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1686.jpg" alt="Khoảnh khắc 7"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1721.jpg" alt="Khoảnh khắc 8"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1733.jpg" alt="Khoảnh khắc 9"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1796.JPG" alt="Khoảnh khắc 10"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1912.jpg" alt="Khoảnh khắc 11"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1929.jpg" alt="Khoảnh khắc 12"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1947.jpg" alt="Khoảnh khắc 13"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1961.jpg" alt="Khoảnh khắc 14"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_1981.jpg" alt="Khoảnh khắc 15"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/HMH_2004.jpg" alt="Khoảnh khắc 16"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img
+                                    src="assets/page3/94ce9b28-462e-4241-8bcf-afefeba47e15.jpeg" alt="Khoảnh khắc 17"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/film_frame1.jpg" alt="Khoảnh khắc 18"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/film_frame2.jpg" alt="Khoảnh khắc 19"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/film_frame3.jpg" alt="Khoảnh khắc 20"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/film_frame4.jpg" alt="Khoảnh khắc 21"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/film_frame5.jpg" alt="Khoảnh khắc 22"
+                                    loading="lazy" decoding="async"></div>
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <div class="film-cell">
+                            <div class="sprockets"><i></i><i></i><i></i><i></i></div>
+                            <div class="film-photo-inner"><img src="assets/page3/film_frame6.jpg" alt="Khoảnh khắc 23"
+                                    loading="lazy" decoding="async"></div>
                             <div class="sprockets"><i></i><i></i><i></i><i></i></div>
                         </div>
                     </div>
@@ -2965,20 +3291,20 @@
         <section class="page-5">
             <!-- 3 ảnh so le trên đỉnh theo chuẩn ảnh mẫu -->
             <div class="page-5-top-layout">
-                <div class="p5-photo p5-left scroll-reveal reveal-slide-left delay-100">
-                    <img src="assets/page5/top1xanh.jpg" alt="Kỷ yếu TLU 1" loading="lazy" decoding="async">
+                <div class="p5-photo p5-left scroll-reveal reveal-slide-left delay-100" id="p5PhotoLeft">
+                    <img src="assets/page5/top1xanh.jpg" alt="Kỷ yếu TLU 1" loading="eager" decoding="async">
                 </div>
-                <div class="p5-photo p5-center scroll-reveal reveal-scale delay-200">
-                    <img src="assets/page5/top2xanh.jpg" alt="Kỷ yếu TLU 2" loading="lazy" decoding="async">
+                <div class="p5-photo p5-center scroll-reveal reveal-scale delay-200" id="p5PhotoCenter">
+                    <img src="assets/page5/top2xanh.jpg" alt="Kỷ yếu TLU 2" loading="eager" decoding="async">
                 </div>
-                <div class="p5-photo p5-right scroll-reveal reveal-slide-right delay-300">
-                    <img src="assets/page5/top3xanh.jpg" alt="Kỷ yếu TLU 3" loading="lazy" decoding="async">
+                <div class="p5-photo p5-right scroll-reveal reveal-slide-right delay-300" id="p5PhotoRight">
+                    <img src="assets/page5/top3xanh.jpg" alt="Kỷ yếu TLU 3" loading="eager" decoding="async">
                 </div>
             </div>
 
             <!-- Ảnh tách nền to ở trung tâm đè lên 3 ảnh trên & làm mờ mượt mà ở đáy -->
             <div class="avatar-cutout-wrap scroll-reveal reveal-scale delay-150">
-                <img src="assets/page5/standing_upper.png" alt="Thanh Tâm Tốt Nghiệp" loading="lazy" decoding="async">
+                <img src="assets/page5/standing_upper.png" alt="Thanh Tâm Tốt Nghiệp" loading="eager" decoding="async">
             </div>
 
             <!-- Đồng hồ đếm ngược to rõ, chuẩn typography -->
@@ -3903,6 +4229,129 @@
                 if (fallbackImg) fallbackImg.style.display = 'block';
                 canvas.style.display = 'none';
             };
+        })();
+
+        /* 5. Logic chuyển ảnh đồng thời cả 3 khung với hiệu ứng vệt mờ trắng & không trùng lặp */
+        (function initPage5Slideshow() {
+            const leftEl = document.getElementById('p5PhotoLeft');
+            const centerEl = document.getElementById('p5PhotoCenter');
+            const rightEl = document.getElementById('p5PhotoRight');
+            if (!leftEl || !centerEl || !rightEl) return;
+
+            const P5_IMAGE_POOL = [
+                'assets/page5/top1xanh.jpg',
+                'assets/page5/top2xanh.jpg',
+                'assets/page5/top3xanh.jpg',
+                'assets/page5/top1_opt.jpg',
+                'assets/page5/top2.jpg',
+                'assets/page5/top2_opt.jpg',
+                'assets/page5/top3.jpg',
+                'assets/page5/top3_opt.jpg',
+                'assets/page5/HMH_1322.jpg',
+                'assets/page5/HMH_1326.jpg',
+                'assets/page5/HMH_1496.jpg',
+                'assets/page5/HMH_1563.jpg',
+                'assets/page5/HMH_1590.jpg',
+                'assets/page5/HMH_1686.jpg',
+                'assets/page5/HMH_1721.jpg',
+                'assets/page5/HMH_1733.jpg',
+                'assets/page5/HMH_1912.jpg',
+                'assets/page5/HMH_1929.jpg',
+                'assets/page5/HMH_1947.jpg',
+                'assets/page5/HMH_1961.jpg',
+                'assets/page5/HMH_2004.jpg',
+                'assets/page5/94ce9b28-462e-4241-8bcf-afefeba47e15.jpeg',
+                'assets/page5/film1.jpg',
+                'assets/page5/film2.jpg',
+                'assets/page5/film3.jpg',
+                'assets/page5/film_frame1.jpg',
+                'assets/page5/film_frame2.jpg',
+                'assets/page5/film_frame3.jpg',
+                'assets/page5/film_frame4.jpg',
+                'assets/page5/film_frame5.jpg'
+            ];
+
+            // Preload trước toàn bộ ảnh vào bộ nhớ cache để đổi ảnh tức thì 0ms delay
+            P5_IMAGE_POOL.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+
+            const frames = [
+                { el: leftEl, current: 'assets/page5/top1xanh.jpg' },
+                { el: centerEl, current: 'assets/page5/top2xanh.jpg' },
+                { el: rightEl, current: 'assets/page5/top3xanh.jpg' }
+            ];
+
+            let isTransitioning = false;
+
+            // Thuật toán chọn 3 ảnh hoàn toàn mới: không trùng nhau và không trùng với 3 ảnh hiện tại
+            function pick3DistinctPhotos() {
+                const currentShown = frames.map(f => f.current);
+                const candidates = P5_IMAGE_POOL.filter(src => !currentShown.includes(src));
+
+                // Trộn ngẫu nhiên (Fisher-Yates shuffle)
+                for (let i = candidates.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+                }
+
+                return candidates.slice(0, 3);
+            }
+
+            function switchAll3Frames() {
+                if (isTransitioning) return;
+                isTransitioning = true;
+
+                const nextPhotos = pick3DistinctPhotos();
+                if (nextPhotos.length < 3) {
+                    isTransitioning = false;
+                    return;
+                }
+
+                // 1. Kích hoạt vệt mờ trắng quét vào che kín ảnh cũ (0ms)
+                frames.forEach(frame => {
+                    frame.el.classList.add('is-transitioning');
+                });
+
+                // 2. Đúng lúc vệt mờ trắng che kín ảnh (230ms): tráo ảnh mới ngay bên dưới!
+                setTimeout(() => {
+                    frames.forEach((frame, idx) => {
+                        frame.current = nextPhotos[idx];
+                        const img = frame.el.querySelector('img');
+                        if (img) {
+                            img.onerror = () => {
+                                // Tự động hồi quy về ảnh chuẩn ban đầu nếu có sự cố
+                                img.src = idx === 0 ? 'assets/page5/top1xanh.jpg' : (idx === 1 ? 'assets/page5/top2xanh.jpg' : 'assets/page5/top3xanh.jpg');
+                            };
+                            img.src = nextPhotos[idx];
+                        }
+                    });
+                }, 230);
+
+                // 3. Sau khi vệt mờ trắng lướt qua phải mở màn để lộ ảnh mới (560ms)
+                setTimeout(() => {
+                    frames.forEach(frame => {
+                        frame.el.classList.remove('is-transitioning');
+                    });
+                    isTransitioning = false;
+                }, 560);
+            }
+
+            // Chu kỳ tự động đổi ảnh đồng thời cả 3 khung (mỗi 4.8 giây đổi 1 lần)
+            const CYCLE_INTERVAL = 4800;
+            setInterval(() => {
+                if (!document.hidden) {
+                    switchAll3Frames();
+                }
+            }, CYCLE_INTERVAL);
+
+            // Bắt đầu lần đổi ảnh đầu tiên sau 4 giây mở trang
+            setTimeout(() => {
+                if (!document.hidden) {
+                    switchAll3Frames();
+                }
+            }, 4000);
         })();
     </script>
 </body>
