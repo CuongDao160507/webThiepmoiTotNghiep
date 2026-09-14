@@ -2118,6 +2118,8 @@
             box-shadow: 0 6px 18px rgba(11, 26, 48, 0.22);
             transition: all 0.2s ease;
             margin-top: 2px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn-submit-rsvp:active {
@@ -3589,9 +3591,17 @@
             });
         }
 
+        let isRsvpSubmitting = false;
+
         function hideCustomNotify() {
             if (rsvpNotifyModal) {
                 rsvpNotifyModal.classList.remove('active');
+            }
+            isRsvpSubmitting = false;
+            if (btnSubmit) {
+                btnSubmit.innerText = "XÁC NHẬN";
+                btnSubmit.style.background = "";
+                btnSubmit.disabled = false;
             }
         }
 
@@ -3602,6 +3612,11 @@
                 if (e.target === rsvpNotifyModal) hideCustomNotify();
             });
         }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && rsvpNotifyModal && rsvpNotifyModal.classList.contains('active')) {
+                hideCustomNotify();
+            }
+        });
 
         /* 2. Logic Đồng hồ đếm ngược đến 07:30 ngày 22/09/2026 */
         const eventDate = new Date(2026, 8, 22, 7, 30, 0).getTime(); // Tháng 9 là index 8
@@ -3693,6 +3708,7 @@
 
         rsvpForm.addEventListener('submit', function (e) {
             e.preventDefault();
+            if (isRsvpSubmitting) return;
 
             const name = document.getElementById('guestName').value.trim();
             const message = document.getElementById('guestMessage').value.trim();
@@ -3713,6 +3729,8 @@
                 return;
             }
 
+            isRsvpSubmitting = true;
+
             const responseData = {
                 name: name,
                 message: message,
@@ -3720,10 +3738,14 @@
                 submittedAt: new Date().toLocaleString('vi-VN')
             };
 
-            // 1. Tự động lưu vào LocalStorage của trình duyệt (tiện kiểm tra ngay tại chỗ)
-            let guestList = JSON.parse(localStorage.getItem('grad_rsvp_list') || '[]');
-            guestList.push(responseData);
-            localStorage.setItem('grad_rsvp_list', JSON.stringify(guestList));
+            // 1. Tự động lưu tức thì vào LocalStorage của trình duyệt
+            try {
+                let guestList = JSON.parse(localStorage.getItem('grad_rsvp_list') || '[]');
+                guestList.push(responseData);
+                localStorage.setItem('grad_rsvp_list', JSON.stringify(guestList));
+            } catch (err) {
+                console.warn("Lưu LocalStorage:", err);
+            }
 
             const isAttending = attending === 'yes';
             const successGreeting = `Cảm ơn ${name}!`;
@@ -3731,40 +3753,12 @@
                 ? "Thanh Tâm rất vui mừng và háo hức được đón tiếp bạn trong ngày tốt nghiệp ý nghĩa này! Lời xác nhận của bạn đã được ghi nhận chu đáo."
                 : "Thanh Tâm đã nhận được lời nhắn của bạn. Dù bạn bận không thể đến dự, Thanh Tâm vẫn vô cùng trân quý tình cảm và sự quan tâm của bạn!";
 
-            // 2. Gợi ý đẩy dữ liệu về Google Sheets (Em chỉ cần dán URL Webhook của Google App Script vào biến bên dưới)
-            const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycby_vsjFTWN_m7Z5gWwvLbW-ZBa7M0cGlMu1LvuljakY9Kl5U5XRQcM87HAIPoej22ys4g/exec";
+            // 2. Phản hồi giao diện siêu tốc (Optimistic UI) - Hiển thị ngay lập tức, không để khách bị delay mạng
+            btnSubmit.innerText = "ĐÃ GHI NHẬN ✨";
+            btnSubmit.style.background = "#1d4ed8";
 
-            if (GOOGLE_SHEET_WEBHOOK_URL) {
-                btnSubmit.innerText = "ĐANG GỬI...";
-                btnSubmit.disabled = true;
-
-                fetch(GOOGLE_SHEET_WEBHOOK_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(responseData)
-                }).then(() => {
-                    showCustomNotify({
-                        title: "Phản Hồi Thành Công!",
-                        greeting: successGreeting,
-                        msg: successMsg
-                    });
-                    rsvpForm.reset();
-                    guestAttending.value = "";
-                    selectedText.innerText = "Xác nhận tham dự?";
-                    selectedText.classList.remove('has-val');
-                    customOptions.forEach(o => o.classList.remove('selected'));
-                    btnSubmit.innerText = "ĐÃ XÁC NHẬN";
-                }).catch(err => {
-                    showCustomNotify({
-                        title: "Đã Lưu Phản Hồi",
-                        greeting: successGreeting,
-                        msg: successMsg
-                    });
-                    btnSubmit.innerText = "XÁC NHẬN";
-                    btnSubmit.disabled = false;
-                });
-            } else {
+            // Bật thông báo modal đẹp mắt ngay sau 120ms tạo cảm giác chạm phản hồi mượt mà
+            setTimeout(() => {
                 showCustomNotify({
                     title: "Phản Hồi Thành Công!",
                     greeting: successGreeting,
@@ -3775,6 +3769,24 @@
                 selectedText.innerText = "Xác nhận tham dự?";
                 selectedText.classList.remove('has-val');
                 customOptions.forEach(o => o.classList.remove('selected'));
+            }, 120);
+
+            // 3. Đẩy ngầm dữ liệu về Google Sheets (Asynchronous Fire-and-Forget với keepalive an toàn)
+            const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycby_vsjFTWN_m7Z5gWwvLbW-ZBa7M0cGlMu1LvuljakY9Kl5U5XRQcM87HAIPoej22ys4g/exec";
+            if (GOOGLE_SHEET_WEBHOOK_URL) {
+                try {
+                    fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(responseData),
+                        keepalive: true
+                    }).catch(err => {
+                        console.warn("Đồng bộ Google Sheets ngầm:", err);
+                    });
+                } catch (err) {
+                    console.warn("Lỗi gửi dữ liệu:", err);
+                }
             }
         });
 
